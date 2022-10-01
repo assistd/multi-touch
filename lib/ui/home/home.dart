@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_touch/src/controllers/canvas.dart';
+import 'package:multi_touch/src/classes/canvas_object.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +15,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _controller.init();
+    _dummyData();
     super.initState();
+  }
+
+  void _dummyData() {
+    _controller.addObject(
+      CanvasObject(
+        dx: 20,
+        dy: 20,
+        width: 100,
+        height: 100,
+        child: Container(color: Colors.red),
+      ),
+    );
   }
 
   @override
@@ -39,13 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
           // appBar: AppBar(),
           body: Stack(
             children: [
-              Positioned(
-                top: 20,
-                left: 20,
-                width: 100,
-                height: 100,
-                child: Container(color: Colors.red),
-              )
+              for (final object in instance!.objects)
+                Positioned(
+                  top: object.dy,
+                  left: object.dx,
+                  width: object.width,
+                  height: object.height,
+                  child: object.child!,
+                )
             ],
           ),
         );
