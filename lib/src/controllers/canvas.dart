@@ -15,7 +15,10 @@ class CanvasController {
   void add([CanvasController? val]) => _controller.add(val ?? this);
 
   /// Stop the stream and finish
-  void close() => _controller.close();
+  void close() {
+    _controller.close();
+    focusNode.dispose();
+  }
 
   /// Start the stream
   void init() => add();
@@ -40,6 +43,47 @@ class CanvasController {
   /// Remove an object from the canvas
   void removeObject(int i) => _update(() {
         _objects.removeAt(i);
+      });
+
+  /// Focus node for listening for keyboard shortcuts
+  final focusNode = FocusNode();
+
+  /// Raw events from keys pressed
+  void rawKeyEvent(BuildContext context, RawKeyEvent key) {}
+
+  /// Called every time a new finger touches the screen
+  void addTouch(int pointer, Offset offsetVal, Offset globalVal) {}
+
+  /// Called when any of the fingers update position
+  void updateTouch(int pointer, Offset offsetVal, Offset globalVal) {}
+
+  /// Called when a finger is removed from the screen
+  void removeTouch(int pointer) {}
+
+  /// Checks if the shift key on the keyboard is pressed
+  bool shiftPressed = false;
+
+  /// Scale of the canvas
+  double get scale => _scale;
+  double _scale = 1;
+  set scale(double value) => _update(() {
+        _scale = value;
+      });
+
+  /// Max possible scale
+  static const double maxScale = 3.0;
+
+  /// Min possible scale
+  static const double minScale = 0.2;
+
+  /// How much to scale the canvas in increments
+  static const double scaleAdjust = 0.05;
+
+  /// Current offset of the canvas
+  Offset get offset => _offset;
+  Offset _offset = Offset.zero;
+  set offset(Offset value) => _update(() {
+        _offset = value;
       });
 
   void _update(void Function() action) {
