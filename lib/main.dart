@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Listener(
         behavior: HitTestBehavior.opaque,
         onPointerMove: (details) {
-          print("---move: ${details.pointer}, ${details.localPosition}, ${details.position}");
+          // print("---move: ${details.pointer}, ${details.localPosition}, ${details.position}");
           updateFinger(details.pointer, details.localPosition);
         },
         onPointerDown: (details) {
@@ -134,7 +134,14 @@ class _MyHomePageState extends State<MyHomePage> {
               width: ballRadius,
               height: ballRadius,
               pointer: details.pointer,
-              child: Container(color: Colors.blue),
+              child: Container(
+                // margin: const EdgeInsets.all(5.0),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                  // borderRadius: BorderRadius.circular(20),
+                ),
+              ),
             ),
           );
         },
@@ -158,16 +165,12 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 for (final object in objects)
                   AnimatedPositioned.fromRect(
-                    duration: const Duration(milliseconds: 20),
-                    rect: object.rect.adjusted(object.offset),
-                    child: FittedBox(
-                      fit: BoxFit.fill,
+                      duration: const Duration(milliseconds: 20),
+                      rect: object.rect.adjusted(object.offset),
                       child: SizedBox.fromSize(
                         size: object.size,
                         child: object.child,
-                      ),
-                    ),
-                  )
+                      ))
               ],
             ),
           ),
