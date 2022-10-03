@@ -120,6 +120,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
+    final media = MediaQuery.of(context);
+
     return Scaffold(
       body: Listener(
         behavior: HitTestBehavior.opaque,
@@ -128,8 +131,10 @@ class _MyHomePageState extends State<MyHomePage> {
           updateFinger(details.pointer, details.localPosition);
         },
         onPointerDown: (details) {
-          print("---down: ${details.pointer}, ${details.localPosition}, ${details.position}");
           Offset p = details.localPosition;
+          print("---down: ${media.devicePixelRatio} "
+              "${details.pointer}, ${details.localPosition}, ${details.position}"
+              " ${p.dx * media.devicePixelRatio} x ${p.dy * media.devicePixelRatio}");
 
           addObject(
             CanvasObject(
@@ -148,8 +153,11 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
         onPointerUp: (details) {
+          Offset p = details.localPosition;
           removeFinger(details.pointer);
-          print("---up: ${details.pointer}, ${details.localPosition}, ${details.position}");
+          print("---up: ${media.devicePixelRatio} "
+              "${details.pointer}, ${details.localPosition}, ${details.position}"
+              " ${p.dx * media.devicePixelRatio} x ${p.dy * media.devicePixelRatio}");
         },
         onPointerCancel: (details) {
           print("---cancel: ${details.pointer}, ${details.localPosition}, ${details.position}");
