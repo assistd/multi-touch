@@ -6,7 +6,23 @@ void main() {
   runApp(const MyApp());
 }
 
-Color generateColor() => Color(0xFFFFFFFF & Random().nextInt(0xFFFFFFFF));
+const List<Color> colorList = [
+  Colors.red,
+  Colors.orange,
+  Colors.blue,
+  Colors.green,
+  Colors.purple,
+  Colors.cyan,
+  Colors.pink,
+  // Colors.deepPurple,
+  // Colors.deepOrange,
+];
+
+int colorIndex = 0;
+Color generateColor() {
+  colorIndex = (colorIndex + 1) % colorList.length;
+  return colorList[colorIndex];
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
