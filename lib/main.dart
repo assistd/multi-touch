@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:multi_touch/src/classes/canvas_object.dart';
+import 'package:multi_touch/canvas_object.dart';
 
 void main() {
   runApp(const MyApp());
