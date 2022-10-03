@@ -1,9 +1,12 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:multi_touch/src/classes/canvas_object.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
+Color generateColor() => Color(0xFFFFFFFF & Random().nextInt(0xFFFFFFFF));
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -127,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPointerDown: (details) {
           print("---down: ${details.pointer}, ${details.localPosition}, ${details.position}");
           Offset p = details.localPosition;
+
           addObject(
             CanvasObject(
               dx: p.dx,
@@ -135,11 +139,9 @@ class _MyHomePageState extends State<MyHomePage> {
               height: ballRadius,
               pointer: details.pointer,
               child: Container(
-                // margin: const EdgeInsets.all(5.0),
-                decoration: const BoxDecoration(
-                  color: Colors.red,
+                decoration: BoxDecoration(
+                  color: generateColor(),
                   shape: BoxShape.circle,
-                  // borderRadius: BorderRadius.circular(20),
                 ),
               ),
             ),
