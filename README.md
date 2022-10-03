@@ -9,4 +9,4 @@
 
 ## 效果
 
-<img src="https://user-images.githubusercontent.com/1572684/193548673-b84e8297-0590-4340-ae36-d6b5a2b22c16.jpeg" width=100>
+<img src="https://user-images.githubusercontent.com/1572684/193548673-b84e8297-0590-4340-ae36-d6b5a2b22c16.jpeg" width=300>
