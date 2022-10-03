@@ -52,10 +52,14 @@ class CanvasController {
   void rawKeyEvent(BuildContext context, RawKeyEvent key) {}
 
   /// Called every time a new finger touches the screen
-  void addTouch(int pointer, Offset offsetVal, Offset globalVal) {}
+  void addTouch(int pointer, Offset offsetVal, Offset globalVal) {
+    offset = offsetVal;
+  }
 
   /// Called when any of the fingers update position
-  void updateTouch(int pointer, Offset offsetVal, Offset globalVal) {}
+  void updateTouch(int pointer, Offset offsetVal, Offset globalVal) {
+    offset = offsetVal;
+  }
 
   /// Called when a finger is removed from the screen
   void removeTouch(int pointer) {}
@@ -89,5 +93,21 @@ class CanvasController {
   void _update(void Function() action) {
     action();
     add(this);
+  }
+
+  static const double _scaleDefault = 1;
+  static const Offset _offsetDefault = Offset.zero;
+
+  void reset() {
+    scale = _scaleDefault;
+    offset = _offsetDefault;
+  }
+
+  void zoomIn() {
+    scale += scaleAdjust;
+  }
+
+  void zoomOut() {
+    scale -= scaleAdjust;
   }
 }
