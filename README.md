@@ -1,16 +1,11 @@
 # multi_touch
 
-A new Flutter project.
+多点触控测试程序，使用`Flutter 3`编写，功能如下：
 
-## Getting Started
+- 支持多点触控轨迹实时显示
+- 实时显示每条轨迹实时坐标，并支持不同颜色
+- 支持自动横竖屏
+- 支持Android/iOS
 
-This project is a starting point for a Flutter application.
+## 效果
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
