@@ -1,18 +1,23 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
 
 class CanvasObject<T> {
-  final double dx;
-  final double dy;
+  double dx;
+  double dy;
   final double width;
   final double height;
-  final T? child;
+  final Color color;
+  final int pointer;
+  final T child;
 
   CanvasObject({
     this.dx = 0,
     this.dy = 0,
     this.width = 100,
     this.height = 100,
-    this.child,
+    this.color = Colors.blue,
+    this.pointer = 0,
+    required this.child,
   });
 
   CanvasObject<T> copyWith({

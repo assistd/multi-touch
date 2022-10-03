@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ui/home/home.dart';
+import 'package:multi_touch/src/classes/canvas_object.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +30,9 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark().copyWith(
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomeScreen(),
+      home: const MyHomePage(
+        title: 'MultiTouch',
+      ),
     );
   }
 }
@@ -54,7 +56,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final double ballRadius = 50;
   int _counter = 0;
+  List<CanvasObject<Widget>> _objects = [];
+
+  /// Current Objects on the canvas
+  List<CanvasObject<Widget>> get objects => _objects;
+
+  /// Add an object to the canvas
+  void addObject(CanvasObject<Widget> value) => setState(() {
+        _objects.add(value);
+      });
+
+  /// Add an object to the canvas
+  void updateObject(int i, CanvasObject<Widget> value) => setState(() {
+        _objects[i] = value;
+      });
+
+  /// Remove an object from the canvas
+  void removeObject(int i) => setState(() {
+        _objects.removeAt(i);
+      });
+
+  void removeFinger(int pointer) {
+    for (final o in _objects) {
+      if (o.pointer == pointer) {
+        setState(() => _objects.remove(o));
+        return;
+      }
+    }
+  }
+
+  /// Update finger offset in the canvas
+  void updateFinger(int pointer, Offset off) => setState(() {
+        for (final o in _objects) {
+          if (o.pointer == pointer) {
+            o.dx = off.dx;
+            o.dy = off.dy;
+            return;
+          }
+        }
+      });
 
   void _incrementCounter() {
     setState(() {
@@ -76,39 +118,70 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: Listener(
+        behavior: HitTestBehavior.opaque,
+        onPointerMove: (details) {
+          print("---move: ${details.pointer}, ${details.localPosition}, ${details.position}");
+          updateFinger(details.pointer, details.localPosition);
+        },
+        onPointerDown: (details) {
+          print("---down: ${details.pointer}, ${details.localPosition}, ${details.position}");
+          Offset p = details.localPosition;
+          addObject(
+            CanvasObject(
+              dx: p.dx,
+              dy: p.dy,
+              width: ballRadius,
+              height: ballRadius,
+              pointer: details.pointer,
+              child: Container(color: Colors.blue),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+          );
+        },
+        onPointerUp: (details) {
+          removeFinger(details.pointer);
+          print("---up: ${details.pointer}, ${details.localPosition}, ${details.position}");
+        },
+        onPointerCancel: (details) {
+          print("---cancel: ${details.pointer}, ${details.localPosition}, ${details.position}");
+          removeFinger(details.pointer);
+        },
+        child: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: SizedBox.expand(
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            child: Stack(
+              children: [
+                for (final object in objects)
+                  AnimatedPositioned.fromRect(
+                    duration: const Duration(milliseconds: 20),
+                    rect: object.rect.adjusted(object.offset),
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: SizedBox.fromSize(
+                        size: object.size,
+                        child: object.child,
+                      ),
+                    ),
+                  )
+              ],
             ),
-          ],
+          ),
+          // child: Stack(
+          //   children: <Widget>[
+          //     const Text(
+          //       'You have pushed the button this many times:',
+          //     ),
+          //     Text(
+          //       '$_counter',
+          //       style: Theme.of(context).textTheme.headline4,
+          //     ),
+          //   ],
+          // ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -117,5 +190,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+extension RectUtils on Rect {
+  Rect adjusted(Offset offset) {
+    return Rect.fromLTWH(offset.dx - width / 2, offset.dy - width / 2, width, height);
   }
 }
