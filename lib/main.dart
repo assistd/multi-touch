@@ -136,6 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
               "${details.pointer}, ${details.localPosition}, ${details.position}"
               " ${p.dx * media.devicePixelRatio} x ${p.dy * media.devicePixelRatio}");
 
+          Color color = generateColor();
           addObject(
             CanvasObject(
               dx: p.dx,
@@ -143,9 +144,10 @@ class _MyHomePageState extends State<MyHomePage> {
               width: ballRadius,
               height: ballRadius,
               pointer: details.pointer,
+              color: color,
               child: Container(
                 decoration: BoxDecoration(
-                  color: generateColor(),
+                  color: color,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -180,21 +182,28 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: SizedBox.fromSize(
                         size: object.size,
                         child: object.child,
-                      ))
+                      )),
+                Container(
+                  margin: const EdgeInsets.only(top: 50, left: 50),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // SizedBox(
+                      //   height: 50,
+                      // ),
+                      for (final o in objects)
+                        Text(
+                          'x=${(o.offset.dx * media.devicePixelRatio).toInt()} '
+                          'y=${(o.offset.dy * media.devicePixelRatio).toInt()}',
+                          style: TextStyle(color: o.color, fontSize: 20),
+                          // style: Theme.of(context).textTheme.headline4,
+                        ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-          // child: Stack(
-          //   children: <Widget>[
-          //     const Text(
-          //       'You have pushed the button this many times:',
-          //     ),
-          //     Text(
-          //       '$_counter',
-          //       style: Theme.of(context).textTheme.headline4,
-          //     ),
-          //   ],
-          // ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
